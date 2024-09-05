@@ -15,6 +15,10 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+bin/
+.settings/org.eclipse.core.resources.prefs
+.settings/org.eclipse.jdt.apt.core.prefs
+.settings/org.eclipse.m2e.core.prefs
 
 .DS_Store
 *.swp
@@ -34,3 +38,4 @@ target
 *.old
 *.md.html
 *.flattened-pom.xml
+.idea
