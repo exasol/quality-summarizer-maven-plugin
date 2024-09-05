@@ -27,11 +27,10 @@ A typical file looks like this:
 
 ```json
 {
-  'project' : 'my-project',
-  'commit' : 'a2464f0...',
-  'date' : '2024-12-31T19:30:00Z',
-  'coverage' : 0.92,
-  ...
+  "project" : "my-project",
+  "commit" : "a2464f0...",
+  "date" : "2024-12-31T19:30:00Z",
+  "coverage" : 0.92
 }
 ```
 
