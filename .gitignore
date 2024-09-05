@@ -16,7 +16,6 @@ buildNumber.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-.idea
 .DS_Store
 *.swp
 local
@@ -24,7 +23,7 @@ local
 **/*.log
 .directory
 venv/
-.idea
+.idea/
 *.iml
 target
 .cache
