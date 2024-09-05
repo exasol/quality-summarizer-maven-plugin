@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>quality-summarizer-maven-plugin</artifactId>
+    <version>0.1.0</version>
+    <description>Maven plugin that summarizes quality metrics from different source into a single file</description>
+    <properties>
+        <java.version>17</java.version>
+    </properties>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.exasol</groupId>
+                <artifactId>project-keeper-maven-plugin</artifactId>
+                <version>4.3.3</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <url>https://github.com/exasol/quality-summarizer-maven-plugin/</url>
+    <parent>
+        <artifactId>quality-summarizer-maven-plugin-generated-parent</artifactId>
+        <groupId>com.exasol</groupId>
+        <version>0.1.0</version>
+        <relativePath>pk_generated_parent.pom</relativePath>
+    </parent>
+</project>
