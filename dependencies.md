@@ -41,13 +41,14 @@
 | [Apache Maven Source Plugin][30]                        | [Apache License, Version 2.0][1] |
 | [Apache Maven Javadoc Plugin][31]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][32]                        | [Eclipse Public License][33]     |
-| [JaCoCo :: Maven Plugin][34]                            | [EPL-2.0][35]                    |
-| [error-code-crawler-maven-plugin][36]                   | [MIT License][37]                |
-| [Reproducible Build Maven Plugin][38]                   | [Apache 2.0][8]                  |
+| [Maven Failsafe Plugin][34]                             | [Apache-2.0][1]                  |
+| [JaCoCo :: Maven Plugin][35]                            | [EPL-2.0][36]                    |
+| [error-code-crawler-maven-plugin][37]                   | [MIT License][38]                |
+| [Reproducible Build Maven Plugin][39]                   | [Apache 2.0][8]                  |
 
-[0]: https://maven.apache.org/ref/3.9.9/maven-plugin-api/
+[0]: https://maven.apache.org/ref/3.9.6/maven-plugin-api/
 [1]: https://www.apache.org/licenses/LICENSE-2.0.txt
-[2]: https://maven.apache.org/ref/3.9.9/maven-core/
+[2]: https://maven.apache.org/ref/3.9.6/maven-core/
 [3]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [4]: https://maven.apache.org/plugin-tools/maven-plugin-plugin
 [5]: https://junit.org/junit5/
@@ -79,8 +80,9 @@
 [31]: https://maven.apache.org/plugins/maven-javadoc-plugin/
 [32]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
 [33]: http://www.eclipse.org/legal/epl-v10.html
-[34]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
-[35]: https://www.eclipse.org/legal/epl-2.0/
-[36]: https://github.com/exasol/error-code-crawler-maven-plugin/
-[37]: https://github.com/exasol/error-code-crawler-maven-plugin/blob/main/LICENSE
-[38]: http://zlika.github.io/reproducible-build-maven-plugin
+[34]: https://maven.apache.org/surefire/maven-failsafe-plugin/
+[35]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
+[36]: https://www.eclipse.org/legal/epl-2.0/
+[37]: https://github.com/exasol/error-code-crawler-maven-plugin/
+[38]: https://github.com/exasol/error-code-crawler-maven-plugin/blob/main/LICENSE
+[39]: http://zlika.github.io/reproducible-build-maven-plugin
