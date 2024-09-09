@@ -10,21 +10,36 @@ Code name:
 
 ## Dependency Updates
 
+### Compile Dependency Updates
+
+* Added `org.apache.maven.plugins:maven-plugin-plugin:3.15.0`
+
+### Test Dependency Updates
+
+* Added `com.exasol:maven-plugin-integration-testing:1.1.3`
+* Added `com.exasol:maven-project-version-getter:1.2.0`
+* Added `commons-io:commons-io:2.16.1`
+* Added `org.apache.maven.plugin-testing:maven-plugin-testing-harness:3.3.0`
+* Added `org.codehaus.plexus:plexus-archiver:4.10.0`
+* Added `org.junit.jupiter:junit-jupiter-engine:5.11.0`
+* Added `org.junit.jupiter:junit-jupiter-params:5.11.0`
+
 ### Plugin Dependency Updates
 
 * Added `com.exasol:error-code-crawler-maven-plugin:2.0.3`
 * Added `com.exasol:project-keeper-maven-plugin:4.3.3`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.16`
-* Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
+* Added `org.apache.maven.plugins:maven-clean-plugin:3.2.0`
 * Added `org.apache.maven.plugins:maven-compiler-plugin:3.13.0`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:3.1.2`
 * Added `org.apache.maven.plugins:maven-enforcer-plugin:3.5.0`
 * Added `org.apache.maven.plugins:maven-gpg-plugin:3.2.4`
-* Added `org.apache.maven.plugins:maven-install-plugin:2.4`
-* Added `org.apache.maven.plugins:maven-jar-plugin:2.4`
+* Added `org.apache.maven.plugins:maven-install-plugin:3.1.1`
+* Added `org.apache.maven.plugins:maven-jar-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-javadoc-plugin:3.7.0`
-* Added `org.apache.maven.plugins:maven-resources-plugin:2.6`
-* Added `org.apache.maven.plugins:maven-site-plugin:3.3`
+* Added `org.apache.maven.plugins:maven-plugin-plugin:3.9.0`
+* Added `org.apache.maven.plugins:maven-resources-plugin:3.3.1`
+* Added `org.apache.maven.plugins:maven-site-plugin:3.12.1`
 * Added `org.apache.maven.plugins:maven-source-plugin:3.2.1`
 * Added `org.apache.maven.plugins:maven-surefire-plugin:3.2.5`
 * Added `org.apache.maven.plugins:maven-toolchains-plugin:3.2.0`
