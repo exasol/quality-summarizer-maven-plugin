@@ -119,6 +119,7 @@ While useful, the summarization is not a mission-critical part of the build and 
 Needs: qs
 
 ## Glossary
+
 CI
 : Continuous Integration
 
