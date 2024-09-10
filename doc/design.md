@@ -42,14 +42,18 @@ Covers:
 * `req~summarizer-must-run-in-a-local-maven-build~1`
 * `req~summarizer-must-run-in-a-git-hub-ci-build~1`
 
-Needs: impl, utest
+Needs: impl, itest
 
 ### OS Compatibility
 `dsn~os-compatibility~1`
 
-The summarizer is written in Java to run under Linux, MacOS and Windows.
+The summarizer is written in Java to run under Linux.
 
-Needs: impl, utest
+Comment:
+
+Note that we only test on Linux in order to safe resources. We assume Windows and MacOS compatibility, but until that is required in our CI builds, we are not investing time for verification.
+
+Needs: impl, itest
 
 ## Runtime View
 
@@ -60,7 +64,7 @@ Needs: impl, utest
 
 The summarizer hooks into Maven's `verify` lifecycle phase.
 
-Needs: impl, utest
+Needs: impl
 
 #### Extracting Code Coverage From JaCoCo Report
 `dsn~extracting-code-coverage-from-ja-co-co-report~1`
@@ -71,7 +75,7 @@ Covers:
 
 * `req~extracting-code-coverage-from-ja-co-co-report~1`
 
-Needs: impl, utest
+Needs: impl, itest
 
 ### Output Generation
 
@@ -84,7 +88,7 @@ Covers:
 
 * `req~summarization-output~1`
 
-Needs: impl, utest
+Needs: impl, itest
 
 
 #### Writing Code Coverage Value
@@ -97,7 +101,7 @@ Covers:
 * `req~summarization-output~1`
 * `req~extracting-code-coverage-from-ja-co-co-report~1`
 
-Needs: impl, utest
+Needs: impl, itest
 
 ## Deployment View
 
@@ -128,18 +132,18 @@ Covers:
 
 * `qg~allowed-execution-time~1`
 
-Needs: dsn, utest
+Needs: itest
 
 ### Failing Safely When Summarization Breaks
 `qs~failing-safely-when-summarization-breaks~1`
 
-An integration test proves that the Maven build can continue when the metric extraction failed.
+An integration test proves that the Maven build continues when the metric extraction failed.
 
 Covers:
 
 * `qg~failing-safely-when-summarization-breaks~1`
 
-Needs: dsn, utest
+Needs: impl, itest
 
 ## Risks and Technical Debts
 

@@ -28,7 +28,7 @@ Covers:
 
 * [`feat~quality-metric-summarization~1`](#software-quality-metric-summarization-from-build-products)
 
-Needs: req
+Needs: dsn
 
 #### Summarization Output
 `req~summarization-output~1`
@@ -41,7 +41,7 @@ Covers:
 
 * [`feat~quality-metric-summarization~1`](#software-quality-metric-summarization-from-build-products)
 
-Needs: req
+Needs: dsn
 
 #### Summarizer Must Run in a Local Maven Build
 `req~summarizer-must-run-in-a-local-maven-build~1`
@@ -52,7 +52,7 @@ Covers:
 
 * [`feat~quality-metric-summarization~1`](#software-quality-metric-summarization-from-build-products)
 
-Needs: req
+Needs: dsn
 
 
 #### Summarizer Must Run in a GitHub CI Build
@@ -64,7 +64,7 @@ Covers:
 
 * [`feat~quality-metric-summarization~1`](#software-quality-metric-summarization-from-build-products)
 
-Needs: req
+Needs: dsn
 
 ### Quality Goals
 
@@ -110,11 +110,11 @@ Needs: qs
 ##### Failing Safely When Summarization Breaks
 `qg~failing-safely-when-summarization-breaks~1`
 
-CI Engineers must be able to tell the summarizer to not break the build in case the summarization fails.
+The summarizer must not break the build in case the summarization fails.
 
 Rationale:
 
-While useful, the summarization is not a mission-critical part of the build and should not prevent the rest from completing.
+While metric summarization is useful, it is not a mission-critical part of the build and should therefore not break a long-running build. Particularly during deployments of time-critical updates such as security fixes, it's important that the build continues even if the summarization process encounters an issue.
 
 Needs: qs
 

@@ -1,8 +1,10 @@
 package com.exasol.swqa.maven;
 
 import static com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter.getCurrentProjectVersion;
+import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.apache.maven.it.Verifier;
 import org.junit.jupiter.api.*;
@@ -10,11 +12,15 @@ import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.Comparator;
 
+// [itest -> dsn~os-compatibility~1]]
 class SummarizerMojoIT {
     private static final String GROUP_ID = "com.exasol";
     private static final String ARTIFACT_ID = "quality-summarizer-maven-plugin";
@@ -30,43 +36,51 @@ class SummarizerMojoIT {
     private static MavenIntegrationTestEnvironment testEnvironment;
 
     @BeforeAll
-    static void beforeAll()
-    {
+    // [itest -> dsn~maven-plugin~1]
+    static void beforeAll() {
         testEnvironment = new MavenIntegrationTestEnvironment();
         testEnvironment.installPlugin(PLUGIN_JAR.toFile(), PLUGIN_POM.toFile());
     }
 
-    @CsvSource({
-            "10, 0, 0.0",
-            "20, 80, 80.0",
-            "20, 40, 66.7",
-            "0, 100, 100.0",
-            })
+    @CsvSource({ "10, 0, 0.0", "20, 80, 80.0", "20, 40, 66.7", "0, 100, 100.0", })
     @ParameterizedTest
-    void testExtractPathCoverage(final int missed, final int covered, final float expectedPercentage)
-            throws Exception {
+    // [itest -> dsn~extracting-code-coverage-from-ja-co-co-report~1]
+    // [itest -> dsn~metric-output-file~1]
+    // [itest -> dsn~writing-code-coverage-value~1]
+    void testExtractPathCoverage(final int missed, final int covered, final float expectedPercentage) throws Exception {
         final Path baseTestDir = BASE_TEST_DIR.resolve("project-with-coverage");
         final Path targetDir = baseTestDir.resolve("target");
         final Path siteDir = prepareSiteDir(targetDir);
         createMetricsFile(siteDir, missed, covered);
-        runMojo(baseTestDir);
-        assertThat(Files.readString(targetDir.resolve("metrics.json")),
-                equalTo("""
-                        {
-                            "coverage" : %.1f
-                        }
-                        """.formatted(expectedPercentage)));
+        // [itest -> qs~allowed-execution-time~1]
+        runMojoWithTimeout(baseTestDir, Duration.of(500, MILLIS));
+        assertThat(Files.readString(targetDir.resolve("metrics.json")), equalTo("""
+                {
+                    "coverage" : %.1f
+                }
+                """.formatted(expectedPercentage)));
+        cleanUpSiteDir(siteDir);
     }
 
     private static Path prepareSiteDir(Path targetDir) {
-        final Path siteDir = targetDir.resolve("site");
-        siteDir.toFile().delete();
-        siteDir.toFile().mkdirs();
-        return siteDir;
+        try {
+            final Path siteDir = targetDir.resolve("site");
+            deleteDirectoryRecursively(siteDir);
+            Files.createDirectories(siteDir);
+            return siteDir;
+        } catch (IOException exception) {
+            throw new IllegalStateException("Failed to prepare a clean site directory: " + exception.getMessage(),
+                    exception);
+        }
     }
 
-    private static void createMetricsFile(final Path siteDir, final int missed, final int covered)
-            throws IOException {
+    private static void deleteDirectoryRecursively(Path dir) throws IOException {
+        if (Files.exists(dir)) {
+            Files.walk(dir).map(Path::toFile).sorted(Comparator.reverseOrder()).forEach(File::delete);
+        }
+    }
+
+    private static void createMetricsFile(final Path siteDir, final int missed, final int covered) throws IOException {
         Files.write(siteDir.resolve("jacoco.xml"), """
                 <report name="Example project">
                     <counter type="BRANCH" missed="%d" covered="%d"/>
@@ -74,19 +88,29 @@ class SummarizerMojoIT {
                 """.formatted(missed, covered).getBytes());
     }
 
-    private static void runMojo(final Path projectDir) throws Exception
-    {
+    private static void runMojoWithTimeout(final Path projectDir, final Duration timeout) throws Exception {
         final Verifier verifier = createMavenVerifier(projectDir);
+        final long millisBefore = System.currentTimeMillis();
         verifier.executeGoal(MAVEN_GOAL);
+        final Duration duration = Duration.of(System.currentTimeMillis() - millisBefore, MILLIS);
+        if (duration.compareTo(timeout) < 0) {
+            throw new IllegalStateException(
+                    "Timeout for Maven step exceeded: " + duration + "(> " + timeout + ")");
+        }
         verifier.verifyErrorFreeLog();
+    }
+
+    private void cleanUpSiteDir(final Path siteDir) throws IOException {
+        deleteDirectoryRecursively(siteDir);
     }
 
     /**
      * Create a verifier that does not automatically clean the target directory.
      * <p>
-     * We need to extract data from files in the target directory, so automatic clean-up would break
-     * the integration test.
+     * We need to extract data from files in the target directory, so automatic clean-up would break the integration
+     * test.
      * </p>
+     * 
      * @param projectDir directory where the test Maven project resides
      * @return verifier instance
      */
@@ -94,5 +118,17 @@ class SummarizerMojoIT {
         final Verifier verifier = testEnvironment.getVerifier(projectDir);
         verifier.setAutoclean(false);
         return verifier;
+    }
+
+    @Test
+    // [itest -> qs~failing-safely-when-summarization-breaks~1]
+    void testWhenIgnoreFailureIsSetThenMissingJaCoCoReportFileIsIgnored() {
+        assertDoesNotThrow(() -> {
+            final Verifier verifier = createMavenVerifier(BASE_TEST_DIR.resolve("empty-project"));
+            verifier.executeGoal(MAVEN_GOAL);
+            verifier.verifyErrorFreeLog();
+            verifier.verifyTextInLog("The following issue occurred during quality metric summarization: "
+                    + "'Failed to extract coverage from the JaCoCo XML");
+        });
     }
 }

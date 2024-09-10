@@ -1,7 +1,6 @@
 package com.exasol.swqa.maven;
 
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -21,48 +20,42 @@ import java.nio.file.Path;
 
 /**
  * The SummarizerMojo class is a Maven plugin goal that performs quality metric summarization.
- * It implements the Mojo interface and extends the AbstractMojo class.
- * The goal "summarize" and runs in the default phase "VERIFY".
+ * <p>
+ * It implements the Mojo interface and extends the AbstractMojo class. The goal "summarize" and runs in the default
+ * phase "VERIFY".
+ * </p>
  */
+// [impl -> dsn~maven-plugin~1]
+// [impl -> dsn~os-compatibility~1]
+// [impl -> dsn~executed-during-verify-phase~1]
 @Mojo(name = "summarize", defaultPhase = LifecyclePhase.VERIFY)
 public class SummarizerMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
     private MavenProject project;
 
-    @Parameter(property = "breakBuildOnFailure", defaultValue = "true")
-    private boolean breakBuildOnFailure;
-
     @Override
-    public void execute() throws MojoFailureException {
+    // [impl -> qs~failing-safely-when-summarization-breaks~1]
+    public void execute() {
         try {
-            writeSummaryFile();
-        } catch (Exception exception) {
-            if (breakBuildOnFailure) {
-                throw new MojoFailureException("Failed", exception);
-            } else {
-                getLog().error("Failed", exception);
-            }
+            summarize();
+        } catch (final Exception exception) {
+            getLog().warn("The following issue occurred during quality metric summarization: '" + exception.getMessage()
+                    + "'. Continuing build since this step is optional.");
         }
     }
 
-    private void writeSummaryFile() throws MojoFailureException {
+    private void summarize() throws MojoFailureException {
         final Path mavenTargetPath = prepareTargetDirectory();
-        final Path summaryFilePath = mavenTargetPath.resolve("metrics.json");
-        getLog().debug("Writing quality summary file to '" + summaryFilePath + "'");
         final Path jacocoXMLPath = mavenTargetPath.resolve("site").resolve("jacoco.xml");
         final float coverage = extractCoverageFromJaCoCoXML(jacocoXMLPath);
-        final String summary = generateSummaryJSON(coverage);
-        try {
-            Files.write(summaryFilePath, summary.getBytes());
-        } catch (IOException exception) {
-            throw new MojoFailureException("Unable to write quality summary file: " + summaryFilePath, exception);
-        }
+        writeSummaryFile(mavenTargetPath, coverage);
     }
 
     private Path prepareTargetDirectory() {
         return Path.of(project.getBuild().getDirectory());
     }
 
+    // [impl -> dsn~extracting-code-coverage-from-ja-co-co-report~1]
     private float extractCoverageFromJaCoCoXML(final Path jacocoXMLPath) throws MojoFailureException {
         try {
             final Document document = getXMLDocument(jacocoXMLPath);
@@ -87,12 +80,13 @@ public class SummarizerMojo extends AbstractMojo {
         final int coveredBranches = Integer.parseInt(counterNode.getAttribute("covered"));
         final int allBranches = missedBranches + coveredBranches;
         float branchCoveragePercentage = coveredBranches * 100.0f / allBranches;
-        getLog().debug("Branch coverage is " + branchCoveragePercentage +". " + coveredBranches + " of " + allBranches +
-                " covered.");
+        getLog().debug("Branch coverage is " + branchCoveragePercentage + ". " + coveredBranches + " of " + allBranches
+                + " covered.");
         return branchCoveragePercentage;
     }
 
-    private static Document getXMLDocument(Path jacocoXMLPath) throws ParserConfigurationException, SAXException, IOException {
+    private static Document getXMLDocument(Path jacocoXMLPath)
+            throws ParserConfigurationException, SAXException, IOException {
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         final Document document = documentBuilder.parse(Files.newInputStream(jacocoXMLPath));
@@ -100,6 +94,20 @@ public class SummarizerMojo extends AbstractMojo {
         return document;
     }
 
+
+    // [impl -> dsn~metric-output-file~1]
+    private void writeSummaryFile(Path mavenTargetPath, float coverage) throws MojoFailureException {
+        final Path summaryFilePath = mavenTargetPath.resolve("metrics.json");
+        getLog().debug("Writing quality summary file to '" + summaryFilePath + "'");
+        final String summary = generateSummaryJSON(coverage);
+        try {
+            Files.write(summaryFilePath, summary.getBytes());
+        } catch (IOException exception) {
+            throw new MojoFailureException("Unable to write quality summary file: " + summaryFilePath, exception);
+        }
+    }
+
+    // [impl -> dsn~writing-code-coverage-value~1]
     private static String generateSummaryJSON(final float coverage) {
         return """
                 {

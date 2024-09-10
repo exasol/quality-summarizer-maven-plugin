@@ -10,10 +10,6 @@ Code name:
 
 ## Dependency Updates
 
-### Compile Dependency Updates
-
-* Added `org.apache.maven.plugins:maven-plugin-plugin:3.15.0`
-
 ### Test Dependency Updates
 
 * Added `com.exasol:maven-plugin-integration-testing:1.1.3`
@@ -47,6 +43,7 @@ Code name:
 * Added `org.basepom.maven:duplicate-finder-maven-plugin:2.0.1`
 * Added `org.codehaus.mojo:flatten-maven-plugin:1.6.0`
 * Added `org.codehaus.mojo:versions-maven-plugin:2.16.2`
+* Added `org.itsallcode:openfasttrace-maven-plugin:2.2.0`
 * Added `org.jacoco:jacoco-maven-plugin:0.8.12`
 * Added `org.sonarsource.scanner.maven:sonar-maven-plugin:4.0.0.4121`
 * Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.2.0`
