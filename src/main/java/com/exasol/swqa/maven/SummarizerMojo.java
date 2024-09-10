@@ -29,8 +29,10 @@ import java.nio.file.Path;
 // [impl -> dsn~os-compatibility~1]
 // [impl -> dsn~executed-during-verify-phase~1]
 @Mojo(name = "summarize", defaultPhase = LifecyclePhase.VERIFY)
+@SuppressWarnings("unused")
 public class SummarizerMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true, required = true)
+    @SuppressWarnings("unused")
     private MavenProject project;
 
     @Override
