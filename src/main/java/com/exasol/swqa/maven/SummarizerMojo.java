@@ -48,6 +48,13 @@ public class SummarizerMojo extends AbstractMojo {
         }
     }
 
+    /**
+     * Create a new instance of the {@link SummarizerMojo}.
+     */
+    public SummarizerMojo() {
+        // Empty on purpose. Needed for JavaDoc in Java 21 and newer
+    }
+
     private void summarize() throws MojoFailureException {
         final Path mavenTargetPath = prepareTargetDirectory();
         final Path jacocoXMLPath = mavenTargetPath.resolve("site").resolve("jacoco.xml");
