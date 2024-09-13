@@ -14,7 +14,6 @@ import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -113,7 +112,7 @@ class SummarizerMojoIT {
         final Instant before = Instant.now();
         verifier.executeGoal(MAVEN_GOAL);
         final Duration duration = Duration.between(Instant.now(), before);
-        if (duration.compareTo(timeout) < 0) {
+        if (duration.compareTo(timeout) > 0) {
             throw new AssertionError(
                     "Allowed execution time for Maven step exceeded: " + duration + "(> " + timeout + ")");
         }

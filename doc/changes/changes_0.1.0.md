@@ -33,7 +33,7 @@ Code name:
 * Added `org.apache.maven.plugins:maven-install-plugin:3.1.1`
 * Added `org.apache.maven.plugins:maven-jar-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-javadoc-plugin:3.7.0`
-* Added `org.apache.maven.plugins:maven-plugin-plugin:3.9.0`
+* Added `org.apache.maven.plugins:maven-plugin-plugin:3.15.0`
 * Added `org.apache.maven.plugins:maven-resources-plugin:3.3.1`
 * Added `org.apache.maven.plugins:maven-site-plugin:3.12.1`
 * Added `org.apache.maven.plugins:maven-source-plugin:3.2.1`

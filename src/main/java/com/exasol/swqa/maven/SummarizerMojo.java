@@ -16,7 +16,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -42,8 +41,10 @@ public class SummarizerMojo extends AbstractMojo {
         try {
             summarize();
         } catch (final Exception exception) {
-            getLog().warn("The following issue occurred during quality metric summarization."
-                    + " Continuing build since this step is optional.", exception);
+            // We intentionally don't provide a stack trace here. This is expected fail-safe behavior, and we should not
+            // spam the log when failing safely.
+            getLog().warn("The following issue occurred during quality metric summarization: '" + exception.getMessage()
+                    + "' Continuing build since this step is optional: ");
         }
     }
 
@@ -78,17 +79,17 @@ public class SummarizerMojo extends AbstractMojo {
         }
     }
 
-    private float calculateBranchCoverage(Element counterNode) {
+    private float calculateBranchCoverage(final Element counterNode) {
         final int missedBranches = Integer.parseInt(counterNode.getAttribute("missed"));
         final int coveredBranches = Integer.parseInt(counterNode.getAttribute("covered"));
         final int allBranches = missedBranches + coveredBranches;
         float branchCoveragePercentage = coveredBranches * 100.0f / allBranches;
-        getLog().debug("Branch coverage is " + branchCoveragePercentage + "%. " + coveredBranches + " of " + allBranches
+        getLog().info("Branch coverage is " + branchCoveragePercentage + "%. " + coveredBranches + " of " + allBranches
                 + " covered.");
         return branchCoveragePercentage;
     }
 
-    private static Document getXMLDocument(Path jacocoXMLPath)
+    private static Document getXMLDocument(final Path jacocoXMLPath)
             throws ParserConfigurationException, SAXException, IOException {
         final DocumentBuilderFactory documentBuilderFactory = createSecureDocumentBuilderFactory();
         final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -102,7 +103,6 @@ public class SummarizerMojo extends AbstractMojo {
      * <ul>
      * <li>XML secure processing enabled</li>
      * <li>Unnecessary features disabled</li>
-     * <li>Resource limits tightened</li>
      * </ul>
      *
      * @see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/jaxp/jaxp.html">Java API for XML
@@ -114,22 +114,13 @@ public class SummarizerMojo extends AbstractMojo {
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         // While secure processing is on by default we have this here to be explicit:
         documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        // JaCoCo reports follow a DTD, so we can disable external schemas and stylesheet:
-        documentBuilderFactory.setFeature(XMLConstants.ACCESS_EXTERNAL_SCHEMA, false);
-        documentBuilderFactory.setFeature(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, false);
         // Disallow inline DTDs:
         documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
-        // Tighten size limits:
-        documentBuilderFactory.setAttribute("http://www.oracle.com/xml/jaxp/properties/elementAttributeLimit", 100);
-        documentBuilderFactory.setAttribute("http://www.oracle.com/xml/jaxp/properties/maxElementDepth", 0);
-        documentBuilderFactory.setAttribute("http://www.oracle.com/xml/jaxp/properties/totalEntitySizeLimit", 5000);
-        documentBuilderFactory.setAttribute("http://www.oracle.com/xml/jaxp/properties/maxEntitySizeLimit", 5000);
-        documentBuilderFactory.setAttribute("http://www.oracle.com/xml/jaxp/properties/entityReplacementLimit", 10000);
         return documentBuilderFactory;
     }
 
     // [impl -> dsn~metric-output-file~1]
-    private void writeSummaryFile(Path mavenTargetPath, float coverage) throws MojoFailureException {
+    private void writeSummaryFile(final Path mavenTargetPath, final float coverage) throws MojoFailureException {
         final Path summaryFilePath = mavenTargetPath.resolve("metrics.json");
         getLog().debug("Writing quality summary file to '" + summaryFilePath + "'");
         final String summary = generateSummaryJSON(coverage);
