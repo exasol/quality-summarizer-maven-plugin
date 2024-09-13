@@ -39,3 +39,4 @@ target
 *.md.html
 *.flattened-pom.xml
 .idea
+src/test/resources/*/log.txt

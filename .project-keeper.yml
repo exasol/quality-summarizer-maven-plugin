@@ -3,3 +3,7 @@ sources:
     path: pom.xml
     modules:
       - maven_central
+      - integration_tests
+excludes:
+  # Since this project is built with Java 17, we tweaked the build-next to run with Java 21.
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
