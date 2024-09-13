@@ -17,7 +17,6 @@ Code name:
 * Added `commons-io:commons-io:2.16.1`
 * Added `org.apache.maven.plugin-testing:maven-plugin-testing-harness:3.3.0`
 * Added `org.codehaus.plexus:plexus-archiver:4.10.0`
-* Added `org.junit.jupiter:junit-jupiter-engine:5.11.0`
 * Added `org.junit.jupiter:junit-jupiter-params:5.11.0`
 
 ### Plugin Dependency Updates

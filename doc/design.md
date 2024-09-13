@@ -6,7 +6,7 @@ The system is designed to work as a Maven Plugin. It reads the [JaCoCo](https://
 
 ## Constraints
 
-The system will be implemented in Java, as a [Maven](https://maven.apache.org/) plugin.
+The system is implemented in Java, as a [Maven](https://maven.apache.org/) plugin.
 
 ## Context and Scope
 
@@ -24,7 +24,7 @@ In order to be picked up by the repository crawler, the file must be available a
 
 For the Minimum Viable Product (MVP), only the overall path coverage will be extracted from JaCoCo's report XML. This value will be written into a `metrics.json` file that can be easily extended in the future to include more metrics.
 
-We also decided to take the metrics directly form the build instead of Sonar, which serves as a quality measurement aggregator in the beginning. This spares us the effort of authentication, storing credentials, dealing with network issues and will overall be faster. Once we reach the point where we need other metrics like Sonar ratings, we will need to revise that strategy. We are clear about that fact, but intentionally chose the option with the lowest complexity until we need more than the path coverage.
+We also decided to take the metrics directly from the build instead of Sonar, which serves as a quality measurement aggregator in the beginning. This spares us the effort of authentication, storing credentials, dealing with network issues and will overall be faster. Once we reach the point where we need other metrics like Sonar ratings, we will need to revise that strategy. We are clear about that fact, but intentionally chose the option with the lowest complexity until we need more than the path coverage.
 
 ## Building Block View
 
@@ -64,16 +64,20 @@ Needs: impl, itest
 
 The summarizer hooks into Maven's `verify` lifecycle phase.
 
+Comment:
+
+A test that the goal `summarize` works in conjunction with the configuration for the right phase in the POM is sufficient. We don't need an extra integration test to prove that this plugin runs in `verify`.
+
 Needs: impl
 
 #### Extracting Code Coverage From JaCoCo Report
-`dsn~extracting-code-coverage-from-ja-co-co-report~1`
+`dsn~extracting-code-coverage-from-jacoco-report~1`
 
 The summarizer extracts the overall path coverage value from the JaCoCo XML report `target/site/jacoco/jacoco.xml`.
 
 Covers:
 
-* `req~extracting-code-coverage-from-ja-co-co-report~1`
+* `req~extracting-code-coverage-from-jacoco-report~1`
 
 Needs: impl, itest
 
@@ -99,7 +103,7 @@ The summarizer writes the overall path coverage value into the element `coverage
 Covers:
 
 * `req~summarization-output~1`
-* `req~extracting-code-coverage-from-ja-co-co-report~1`
+* `req~extracting-code-coverage-from-jacoco-report~1`
 
 Needs: impl, itest
 

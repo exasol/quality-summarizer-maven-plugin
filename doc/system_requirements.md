@@ -20,7 +20,7 @@ Needs: req
 The system is required to extract quality metrics from existing reports (such as JaCoCo) and consolidate them into a single file during a Continuous Integration (CI) build.
 
 #### Extracting Code Coverage From JaCoCo Report
-`req~extracting-code-coverage-from-ja-co-co-report~1`
+`req~extracting-code-coverage-from-jacoco-report~1`
 
 The summarizer extracts the overall path coverage from a JaCoCo Report.
 

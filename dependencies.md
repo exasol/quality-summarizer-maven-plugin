@@ -13,7 +13,6 @@
 
 | Dependency                            | License                          |
 | ------------------------------------- | -------------------------------- |
-| [JUnit Jupiter Engine][4]             | [Eclipse Public License v2.0][5] |
 | [JUnit Jupiter Params][4]             | [Eclipse Public License v2.0][5] |
 | [Maven Plugin Testing Mechanism][6]   | [Apache License, Version 2.0][7] |
 | [Maven Plugin Integration Testing][8] | [MIT License][9]                 |
