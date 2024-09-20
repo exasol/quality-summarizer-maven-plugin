@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 
 /**
  * The SummarizerMojo class is a Maven plugin goal that performs quality metric summarization.
@@ -140,10 +141,12 @@ public class SummarizerMojo extends AbstractMojo {
 
     // [impl -> dsn~writing-code-coverage-value~1]
     private static String generateSummaryJSON(final float coverage) {
+        // We are enforcing the US locale for numbers here in order to make sure that a dot will be used as decimal
+        // separator.
         return """
                 {
                     "coverage" : %.1f
                 }
-                """.formatted(coverage);
+                """.formatted(Locale.US, coverage);
     }
 }
