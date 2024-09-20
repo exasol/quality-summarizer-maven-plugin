@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -38,6 +39,7 @@ class SummarizerMojoIT {
     // We need the flattened version of the POM file in order to include the generated POM.
     private static final Path PLUGIN_POM = Path.of(".flattened-pom.xml").toAbsolutePath();
     private static final Path BASE_TEST_DIR = Paths.get("src/test/resources").toAbsolutePath();
+    public static final Duration MAX_EXECUTION_TIME = Duration.of(500, MILLIS);
 
     private static MavenIntegrationTestEnvironment testEnvironment;
 
@@ -61,7 +63,7 @@ class SummarizerMojoIT {
         try {
             createMetricsFile(siteDir, missed, covered);
             // [itest -> qs~allowed-execution-time~1]
-            runMojoWithMaxAllowedExecutionDuration(baseTestDir, Duration.of(500, MILLIS));
+            runMojoWithMaxAllowedExecutionDuration(baseTestDir, MAX_EXECUTION_TIME);
             assertThat(Files.readString(targetDir.resolve("metrics.json")), equalTo("""
                     {
                         "coverage" : %s
@@ -86,13 +88,15 @@ class SummarizerMojoIT {
 
     private static void deleteDirectoryRecursively(Path dir) throws IOException {
         if (Files.exists(dir)) {
-            try(final Stream<Path> dirElements = Files.walk(dir)) {
+            try (final Stream<Path> dirElements = Files.walk(dir)) {
                 dirElements //
                         .map(Path::toFile)//
                         .sorted(Comparator.reverseOrder()) //
                         .forEach(file -> {
                             final boolean success = file.delete();
-                            if (!success) { LOGGER.warning("Unable to delete directory entry: " + file);}
+                            if (!success) {
+                                LOGGER.warning("Unable to delete directory entry: " + file);
+                            }
                         });
             }
         }
@@ -151,5 +155,27 @@ class SummarizerMojoIT {
                     + "'Failed to extract coverage from the JaCoCo XML");
             assertThat(emptyProjectDir.resolve("metrics.json").toFile(), not(anExistingFile()));
         });
+    }
+
+    @Test
+    void testNumberFormatInJsonCorrectWhenUsingGermanLocale() throws Exception {
+        final Locale previousLocale = Locale.getDefault();
+        final Path baseTestDir = BASE_TEST_DIR.resolve("project-with-coverage");
+        final Path targetDir = baseTestDir.resolve("target");
+        final Path siteDir = prepareSiteDir(targetDir);
+        try {
+            // The German number format uses a comma as decimal separator.
+            Locale.setDefault(Locale.GERMAN);
+            createMetricsFile(siteDir, 2, 1);
+            runMojoWithMaxAllowedExecutionDuration(baseTestDir, MAX_EXECUTION_TIME);
+            assertThat(Files.readString(targetDir.resolve("metrics.json")), equalTo("""
+                    {
+                        "coverage" : 33.3
+                    }
+                    """));
+        } finally {
+            Locale.setDefault(previousLocale);
+            cleanUpSiteDir(siteDir);
+        }
     }
 }
