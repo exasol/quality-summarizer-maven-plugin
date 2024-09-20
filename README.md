@@ -1,7 +1,7 @@
 # quality-summarizer-maven-plugin
 
 [![Build Status](https://github.com/exasol/quality-summarizer-maven-plugin/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/quality-summarizer-maven-plugin/actions/workflows/ci-build.yml)
-[![Maven Central &ndash; quality-summarizer-maven-plugin](https://img.shields.io/maven-central/v/com.exasol/quality-summarizer-maven-plugin)](https://search.maven.org/artifact/com.exasol/quality-summarizer-maven-plugin)
+[![Maven Central &ndash; Quality Summarizer Maven Plugin](https://img.shields.io/maven-central/v/com.exasol/quality-summarizer-maven-plugin)](https://search.maven.org/artifact/com.exasol/quality-summarizer-maven-plugin)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aquality-summarizer-maven-plugin&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Aquality-summarizer-maven-plugin)
 
