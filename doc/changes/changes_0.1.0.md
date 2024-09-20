@@ -30,6 +30,7 @@ This file will then be picked up by a separate crawler from the CI build. That c
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.16`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
 * Added `org.apache.maven.plugins:maven-compiler-plugin:3.13.0`
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.7.1`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:3.1.2`
 * Added `org.apache.maven.plugins:maven-enforcer-plugin:3.5.0`
 * Added `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5`
