@@ -18,6 +18,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Locale;
 
 /**
  * The SummarizerMojo class is a Maven plugin goal that performs quality metric summarization.
@@ -90,7 +91,7 @@ public class SummarizerMojo extends AbstractMojo {
         final int missedBranches = Integer.parseInt(counterNode.getAttribute("missed"));
         final int coveredBranches = Integer.parseInt(counterNode.getAttribute("covered"));
         final int allBranches = missedBranches + coveredBranches;
-        float branchCoveragePercentage = coveredBranches * 100.0f / allBranches;
+        float branchCoveragePercentage = (coveredBranches * 100.0f) / allBranches;
         getLog().info("Branch coverage is " + branchCoveragePercentage + "%. " + coveredBranches + " of " + allBranches
                 + " covered.");
         return branchCoveragePercentage;
@@ -140,10 +141,13 @@ public class SummarizerMojo extends AbstractMojo {
 
     // [impl -> dsn~writing-code-coverage-value~1]
     private static String generateSummaryJSON(final float coverage) {
+        // We are enforcing the US locale for numbers here in order to make sure that a dot will be used as decimal
+        // separator.
+        final String coverageAsUSLocaleString = String.format(Locale.US, "%.1f", coverage);
         return """
                 {
-                    "coverage" : %.1f
+                    "coverage" : %s
                 }
-                """.formatted(coverage);
+                """.formatted(coverageAsUSLocaleString);
     }
 }

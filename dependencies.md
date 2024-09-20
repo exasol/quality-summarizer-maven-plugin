@@ -46,6 +46,7 @@
 | [JaCoCo :: Maven Plugin][38]                            | [EPL-2.0][39]                         |
 | [error-code-crawler-maven-plugin][40]                   | [MIT License][41]                     |
 | [Reproducible Build Maven Plugin][42]                   | [Apache 2.0][5]                       |
+| [Apache Maven Dependency Plugin][43]                    | [Apache-2.0][1]                       |
 
 [0]: https://maven.apache.org/ref/3.8.8/maven-plugin-api/
 [1]: https://www.apache.org/licenses/LICENSE-2.0.txt
@@ -90,3 +91,4 @@
 [40]: https://github.com/exasol/error-code-crawler-maven-plugin/
 [41]: https://github.com/exasol/error-code-crawler-maven-plugin/blob/main/LICENSE
 [42]: http://zlika.github.io/reproducible-build-maven-plugin
+[43]: https://maven.apache.org/plugins/maven-dependency-plugin/

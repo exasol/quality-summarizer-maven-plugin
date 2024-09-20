@@ -1,12 +1,16 @@
-# Quality Summarizer Maven Plugin 0.1.0, released 2024-??-??
+# Quality Summarizer Maven Plugin 0.1.0, released 2024-09-20
 
-Code name:
+Code name: Path Coverage Extraction
 
 ## Summary
 
+In this first release the Quality Summarizer Maven Plugin extracts the overall path coverage of a project from the JaCoCo report and writes it to a file called `metrics.json` in the `target` directory.
+
+This file will then be picked up by a separate crawler from the CI build. That crawler is outside the scope of this project.
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #4: Added extraction of overall path coverage from JaCoCo report 
 
 ## Dependency Updates
 
@@ -26,6 +30,7 @@ Code name:
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.16`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
 * Added `org.apache.maven.plugins:maven-compiler-plugin:3.13.0`
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.7.1`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:3.1.2`
 * Added `org.apache.maven.plugins:maven-enforcer-plugin:3.5.0`
 * Added `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5`
