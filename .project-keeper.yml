@@ -16,27 +16,19 @@ build:
         - action: INSERT_AFTER
           stepId: build-pk-verify
           content:
-            name: Install to local Maven repo
-            id: maven-install
-            run: mvn --batch-mode install
-        - action: INSERT_AFTER
-          stepId: maven-install
-          content:
             name: Run summarizer mojo
             id: maven-run-summarizer
-            run: mvn --batch-mode install
+            run: |
+              mvn --batch-mode install
+              mvn --batch-mode com.exasol:quality-summarizer-maven-plugin:summarize
 
     - name: "release.yml"
       stepCustomizations:
         - action: INSERT_AFTER
           stepId: build
           content:
-            name: Install to local Maven repo
-            id: maven-install
-            run: mvn --batch-mode install
-        - action: INSERT_AFTER
-          stepId: maven-install
-          content:
             name: Run summarizer mojo
             id: maven-run-summarizer
-            run: mvn --batch-mode install
+            run: |
+              mvn --batch-mode install
+              mvn --batch-mode com.exasol:quality-summarizer-maven-plugin:summarize

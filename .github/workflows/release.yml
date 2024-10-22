@@ -109,16 +109,11 @@ jobs:
         id: build,
         run: mvn --batch-mode -DskipTests clean verify
       }
-      - {
-        name: Install to local Maven repo,
-        id: maven-install,
-        run: mvn --batch-mode install
-      }
-      - {
-        name: Run summarizer mojo,
-        id: maven-run-summarizer,
-        run: mvn --batch-mode install
-      }
+      - name: Run summarizer mojo
+        id: maven-run-summarizer
+        run: |
+          mvn --batch-mode install
+          mvn --batch-mode com.exasol:quality-summarizer-maven-plugin:summarize
       - {
         name: List secret GPG keys,
         id: list-secret-gpg-keys,
