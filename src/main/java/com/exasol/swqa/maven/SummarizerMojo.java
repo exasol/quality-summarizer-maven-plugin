@@ -1,40 +1,44 @@
 package com.exasol.swqa.maven;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Locale;
 
+import javax.inject.Inject;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.*;
+
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.project.MavenProject;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
+
 /**
  * The SummarizerMojo class is a Maven plugin goal that performs quality metric summarization.
  * <p>
- * The goal "summarize" and runs in the default phase "VERIFY".
+ * The goal "summarize" and runs in the default phase {@code VERIFY}.
  * </p>
  */
 // [impl -> dsn~maven-plugin~1]
 // [impl -> dsn~os-compatibility~1]
 // [impl -> dsn~executed-during-verify-phase~1]
 @Mojo(name = "summarize", defaultPhase = LifecyclePhase.VERIFY)
-@SuppressWarnings("unused")
 public class SummarizerMojo extends AbstractMojo {
-    @Parameter(defaultValue = "${project}", readonly = true, required = true)
-    @SuppressWarnings("unused")
     private MavenProject project;
+
+    /**
+     * Create a new instance. This is called by Maven and injects the project.
+     * 
+     * @param project current maven project
+     */
+    @Inject
+    public SummarizerMojo(final MavenProject project) {
+        this.project = project;
+    }
 
     @Override
     // [impl -> qs~failing-safely-when-summarization-breaks~1]
@@ -45,7 +49,7 @@ public class SummarizerMojo extends AbstractMojo {
             // We intentionally don't provide a stack trace here. This is expected fail-safe behavior, and we should not
             // spam the log when failing safely.
             getLog().warn("The following issue occurred during quality metric summarization: '" + exception.getMessage()
-                    + "' Continuing build since this step is optional: ");
+                    + "' Continuing build since this step is optional.");
         }
     }
 
@@ -91,7 +95,7 @@ public class SummarizerMojo extends AbstractMojo {
         final int missedBranches = Integer.parseInt(counterNode.getAttribute("missed"));
         final int coveredBranches = Integer.parseInt(counterNode.getAttribute("covered"));
         final int allBranches = missedBranches + coveredBranches;
-        float branchCoveragePercentage = (coveredBranches * 100.0f) / allBranches;
+        final float branchCoveragePercentage = (coveredBranches * 100.0f) / allBranches;
         getLog().info("Branch coverage is " + branchCoveragePercentage + "%. " + coveredBranches + " of " + allBranches
                 + " covered.");
         return branchCoveragePercentage;
@@ -134,7 +138,7 @@ public class SummarizerMojo extends AbstractMojo {
         final String summary = generateSummaryJSON(coverage);
         try {
             Files.writeString(summaryFilePath, summary);
-        } catch (IOException exception) {
+        } catch (final IOException exception) {
             throw new MojoFailureException("Unable to write quality summary file: " + summaryFilePath, exception);
         }
     }
