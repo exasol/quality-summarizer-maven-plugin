@@ -31,7 +31,7 @@ public class SummarizerMojo extends AbstractMojo {
     private final MavenProject project;
 
     /**
-     * Create a new instance of the {@link SummarizerMojoTest}. This is called by Maven and injects the project.
+     * Create a new instance of the {@link SummarizerMojo}. This is called by Maven and injects the project.
      * 
      * @param project current maven project
      */
