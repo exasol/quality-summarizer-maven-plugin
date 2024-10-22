@@ -70,7 +70,7 @@ jobs:
       - name: Run summarizer mojo
         id: maven-run-summarizer
         run: |
-          mvn --batch-mode install
+          mvn --batch-mode install -DskipTests
           mvn --batch-mode com.exasol:quality-summarizer-maven-plugin:summarize
       - name: Sonar analysis
         id: sonar-analysis
