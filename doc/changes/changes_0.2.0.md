@@ -4,11 +4,12 @@ Code name: Downgrade Maven Version
 
 ## Summary
 
-This version downgrades the required Maven version from 3.8.8 to 3.8.7, allowing this plugin to work on GitHub action runners `windows-latest`.
+This version downgrades the required Maven version from 3.8.8 to 3.8.7, allowing this plugin to work on GitHub action runners `windows-latest`. The release also allows reading jacoco report with doctype declaration.
 
 ## Bugfixes
 
 * #9: Downgrade required Maven version
+* #7: Allow reading jacoco report with doctype declaration.
 
 ## Dependency Updates
 
