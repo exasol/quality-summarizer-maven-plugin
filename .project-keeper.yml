@@ -4,6 +4,39 @@ sources:
     modules:
       - maven_central
       - integration_tests
+    artifacts:
+      - target/metrics.json
 excludes:
   # Since this project is built with Java 17, we tweaked the build-next to run with Java 21.
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
+build:
+  workflows:
+    - name: "ci-build.yml"
+      stepCustomizations:
+        - action: INSERT_AFTER
+          stepId: build-pk-verify
+          content:
+            name: Install to local Maven repo
+            id: maven-install
+            run: mvn --batch-mode install
+        - action: INSERT_AFTER
+          stepId: maven-install
+          content:
+            name: Run summarizer mojo
+            id: maven-run-summarizer
+            run: mvn --batch-mode install
+
+    - name: "release.yml"
+      stepCustomizations:
+        - action: INSERT_AFTER
+          stepId: build
+          content:
+            name: Install to local Maven repo
+            id: maven-install
+            run: mvn --batch-mode install
+        - action: INSERT_AFTER
+          stepId: maven-install
+          content:
+            name: Run summarizer mojo
+            id: maven-run-summarizer
+            run: mvn --batch-mode install
