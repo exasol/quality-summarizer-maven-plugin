@@ -1,4 +1,4 @@
-# Quality Summarizer Maven Plugin 0.2.0, released 2024-10-22
+# Quality Summarizer Maven Plugin 0.2.0, released 2024-10-??
 
 Code name: Configure Jacoco report path.
 
