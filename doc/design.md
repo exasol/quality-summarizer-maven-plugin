@@ -79,7 +79,7 @@ Covers:
 
 * `req~extracting-code-coverage-from-jacoco-report~1`
 
-Needs: impl, itest
+Needs: impl, utest, itest
 
 ### Output Generation
 

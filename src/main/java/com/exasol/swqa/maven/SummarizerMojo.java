@@ -28,10 +28,10 @@ import org.xml.sax.SAXException;
 // [impl -> dsn~executed-during-verify-phase~1]
 @Mojo(name = "summarize", defaultPhase = LifecyclePhase.VERIFY)
 public class SummarizerMojo extends AbstractMojo {
-    private MavenProject project;
+    private final MavenProject project;
 
     /**
-     * Create a new instance. This is called by Maven and injects the project.
+     * Create a new instance of the {@link SummarizerMojo}. This is called by Maven and injects the project.
      * 
      * @param project current maven project
      */
@@ -53,13 +53,6 @@ public class SummarizerMojo extends AbstractMojo {
         }
     }
 
-    /**
-     * Create a new instance of the {@link SummarizerMojo}.
-     */
-    public SummarizerMojo() {
-        // Empty on purpose. Needed for JavaDoc in Java 21 and newer
-    }
-
     private void summarize() throws MojoFailureException {
         final Path mavenTargetPath = prepareTargetDirectory();
         final Path jacocoXMLPath = mavenTargetPath.resolve("site").resolve("jacoco.xml");
@@ -72,7 +65,7 @@ public class SummarizerMojo extends AbstractMojo {
     }
 
     // [impl -> dsn~extracting-code-coverage-from-jacoco-report~1]
-    private float extractCoverageFromJaCoCoXML(final Path jacocoXMLPath) throws MojoFailureException {
+    float extractCoverageFromJaCoCoXML(final Path jacocoXMLPath) throws MojoFailureException {
         try {
             final Document document = getXMLDocument(jacocoXMLPath);
             final NodeList reportNodes = document.getElementsByTagName("report");
@@ -126,8 +119,10 @@ public class SummarizerMojo extends AbstractMojo {
         final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         // While secure processing is on by default we have this here to be explicit:
         documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        // Disallow inline DTDs:
-        documentBuilderFactory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        // Jacoco reports contain a DOCTYPE, so we can't disallow DOCTYPEs using by setting
+        // http://apache.org/xml/features/disallow-doctype-decl to true.
+        // Instead we deactivate loading external DTDs.
+        documentBuilderFactory.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
         return documentBuilderFactory;
     }
 
