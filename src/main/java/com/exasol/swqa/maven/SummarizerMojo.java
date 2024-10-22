@@ -1,9 +1,11 @@
 package com.exasol.swqa.maven;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Locale;
+import java.util.*;
+import java.util.stream.Stream;
 
 import javax.inject.Inject;
 import javax.xml.XMLConstants;
@@ -11,8 +13,7 @@ import javax.xml.parsers.*;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -29,6 +30,9 @@ import org.xml.sax.SAXException;
 @Mojo(name = "summarize", defaultPhase = LifecyclePhase.VERIFY)
 public class SummarizerMojo extends AbstractMojo {
     private final MavenProject project;
+
+    @Parameter(property = "jacocoReport", required = false)
+    private File jacocoReport;
 
     /**
      * Create a new instance of the {@link SummarizerMojo}. This is called by Maven and injects the project.
@@ -54,10 +58,23 @@ public class SummarizerMojo extends AbstractMojo {
     }
 
     private void summarize() throws MojoFailureException {
-        final Path mavenTargetPath = prepareTargetDirectory();
-        final Path jacocoXMLPath = mavenTargetPath.resolve("site").resolve("jacoco.xml");
+        final Path jacocoXMLPath = findJacocoXMLPath();
         final float coverage = extractCoverageFromJaCoCoXML(jacocoXMLPath);
-        writeSummaryFile(mavenTargetPath, coverage);
+        writeSummaryFile(coverage);
+    }
+
+    private Path findJacocoXMLPath() throws MojoFailureException {
+        if (this.jacocoReport != null) {
+            return this.jacocoReport.toPath().toAbsolutePath();
+        }
+        final Path targetDir = prepareTargetDirectory();
+        final List<Path> jacocoXMLPaths = Stream.of("jacoco.xml", "site/jacoco.xml", "site/jacoco/jacoco.xml")
+                .map(targetDir::resolve).toList();
+        final Optional<Path> jacocoXMLPath = jacocoXMLPaths.stream().filter(Files::exists).findFirst();
+        if (jacocoXMLPath.isEmpty()) {
+            throw new MojoFailureException("Jacoco XML report not found in the following locations: " + jacocoXMLPaths);
+        }
+        return jacocoXMLPath.get();
     }
 
     private Path prepareTargetDirectory() {
@@ -127,8 +144,8 @@ public class SummarizerMojo extends AbstractMojo {
     }
 
     // [impl -> dsn~metric-output-file~1]
-    private void writeSummaryFile(final Path mavenTargetPath, final float coverage) throws MojoFailureException {
-        final Path summaryFilePath = mavenTargetPath.resolve("metrics.json");
+    private void writeSummaryFile(final float coverage) throws MojoFailureException {
+        final Path summaryFilePath = prepareTargetDirectory().resolve("metrics.json");
         getLog().debug("Writing quality summary file to '" + summaryFilePath + "'");
         final String summary = generateSummaryJSON(coverage);
         try {
