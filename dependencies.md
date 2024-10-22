@@ -48,9 +48,9 @@
 | [Reproducible Build Maven Plugin][42]                   | [Apache 2.0][5]                       |
 | [Apache Maven Dependency Plugin][43]                    | [Apache-2.0][1]                       |
 
-[0]: https://maven.apache.org/ref/3.8.8/maven-plugin-api/
+[0]: https://maven.apache.org/ref/3.8.7/maven-plugin-api/
 [1]: https://www.apache.org/licenses/LICENSE-2.0.txt
-[2]: https://maven.apache.org/ref/3.8.8/maven-core/
+[2]: https://maven.apache.org/ref/3.8.7/maven-core/
 [3]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [4]: https://github.com/google/guava
 [5]: http://www.apache.org/licenses/LICENSE-2.0.txt
