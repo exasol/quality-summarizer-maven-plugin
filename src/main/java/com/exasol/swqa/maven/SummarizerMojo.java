@@ -83,6 +83,7 @@ public class SummarizerMojo extends AbstractMojo {
 
     // [impl -> dsn~extracting-code-coverage-from-jacoco-report~1]
     float extractCoverageFromJaCoCoXML(final Path jacocoXMLPath) throws MojoFailureException {
+        getLog().info("Reading Jacoco report '" + jacocoXMLPath + "'");
         try {
             final Document document = getXMLDocument(jacocoXMLPath);
             final NodeList reportNodes = document.getElementsByTagName("report");
