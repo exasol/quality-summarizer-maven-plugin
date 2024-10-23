@@ -90,7 +90,7 @@ class SummarizerMojoTest {
                         <counter type="CLASS" missed="1" covered="1" />
                     </package>
                     <counter type="INSTRUCTION" missed="20" covered="237" />
-                    <counter type="BRANCH" missed="0" covered="100" />
+                    <counter type="BRANCH" missed="0" covered="100" /> <!-- This is the element we need -->
                     <counter type="LINE" missed="5" covered="55" />
                     <counter type="COMPLEXITY" missed="2" covered="14" />
                     <counter type="METHOD" missed="1" covered="12" />
