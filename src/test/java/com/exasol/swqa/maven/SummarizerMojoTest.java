@@ -33,14 +33,6 @@ class SummarizerMojoTest {
         assertThat(extractCoverageFromJaCoCoXML(jacocoReport("", missed, covered)), equalTo(expectedPercentage));
     }
 
-    String jacocoReport(final String xmlPrefix, final int missed, final int covered) {
-        return """
-                %s<report name="Example project">
-                         <counter type="BRANCH" missed="%d" covered="%d"/>
-                </report>
-                """.formatted(xmlPrefix, missed, covered);
-    }
-
     @Test
     void extractCoverageFromXmlWithDoctype() throws MojoFailureException, IOException {
         assertThat(extractCoverageFromJaCoCoXML(jacocoReport("""
@@ -56,7 +48,67 @@ class SummarizerMojoTest {
                 """, 20, 80)), equalTo(80.0F));
     }
 
-    float extractCoverageFromJaCoCoXML(final String jacocoReportContent) throws IOException, MojoFailureException {
+    @Test
+    void extractCoverageFromTopLevelElement() throws MojoFailureException, IOException {
+        assertThat(extractCoverageFromJaCoCoXML("""
+                <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+                <!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.1//EN" "report.dtd">
+                <report name="Quality Summarizer Maven Plugin">
+                    <sessioninfo id="hostname" start="1729610403849" dump="1729610408295" />
+                    <package name="com/exasol/swqa/maven">
+                        <class name="com/exasol/swqa/maven/SummarizerMojo" sourcefilename="SummarizerMojo.java">
+                            <method name="&lt;init&gt;" desc="(Lorg/apache/maven/project/MavenProject;)V" line="43">
+                                <counter type="INSTRUCTION" missed="1" covered="6" />
+                                <counter type="LINE" missed="1" covered="3" />
+                                <counter type="COMPLEXITY" missed="1" covered="1" />
+                                <counter type="METHOD" missed="1" covered="1" />
+                            </method>
+                            <!-- ... -->
+                            <counter type="INSTRUCTION" missed="20" covered="237" />
+                            <counter type="BRANCH" missed="2" covered="3" />
+                            <counter type="LINE" missed="5" covered="55" />
+                            <counter type="COMPLEXITY" missed="2" covered="14" />
+                            <counter type="METHOD" missed="1" covered="12" />
+                            <counter type="CLASS" missed="1" covered="1" />
+                        </class>
+                        <sourcefile name="SummarizerMojo.java">
+                            <line nr="43" mi="0" ci="2" mb="0" cb="0" />
+                            <line nr="44" mi="0" ci="3" mb="0" cb="0" />
+                            <!-- ... -->
+                            <counter type="INSTRUCTION" missed="20" covered="237" />
+                            <counter type="BRANCH" missed="2" covered="4" />
+                            <counter type="LINE" missed="5" covered="55" />
+                            <counter type="COMPLEXITY" missed="2" covered="14" />
+                            <counter type="METHOD" missed="1" covered="12" />
+                            <counter type="CLASS" missed="1" covered="1" />
+                        </sourcefile>
+                        <counter type="INSTRUCTION" missed="20" covered="237" />
+                        <counter type="BRANCH" missed="2" covered="5" />
+                        <counter type="LINE" missed="5" covered="55" />
+                        <counter type="COMPLEXITY" missed="2" covered="14" />
+                        <counter type="METHOD" missed="1" covered="12" />
+                        <counter type="CLASS" missed="1" covered="1" />
+                    </package>
+                    <counter type="INSTRUCTION" missed="20" covered="237" />
+                    <counter type="BRANCH" missed="0" covered="100" /> <!-- This is the element we need -->
+                    <counter type="LINE" missed="5" covered="55" />
+                    <counter type="COMPLEXITY" missed="2" covered="14" />
+                    <counter type="METHOD" missed="1" covered="12" />
+                    <counter type="CLASS" missed="1" covered="1" />
+                </report>
+                """), equalTo(100.0F));
+    }
+
+    private String jacocoReport(final String xmlPrefix, final int missed, final int covered) {
+        return """
+                %s<report name="Example project">
+                         <counter type="BRANCH" missed="%d" covered="%d"/>
+                </report>
+                """.formatted(xmlPrefix, missed, covered);
+    }
+
+    private float extractCoverageFromJaCoCoXML(final String jacocoReportContent)
+            throws IOException, MojoFailureException {
         final Path xmlFile = tempDir.resolve("jacoco.xml");
         Files.writeString(xmlFile, jacocoReportContent);
         return testee().extractCoverageFromJaCoCoXML(xmlFile);
