@@ -36,7 +36,7 @@ A typical file looks like this:
 
 ## Usage
 
-Add the plugin following to your `pom.xml`:
+Add the following plugin to your `pom.xml`:
 
 ```xml
 <plugin>
