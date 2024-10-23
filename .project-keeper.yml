@@ -4,8 +4,6 @@ sources:
     modules:
       - maven_central
       - integration_tests
-    artifacts:
-      - target/metrics.json
 excludes:
   # Since this project is built with Java 17, we tweaked the build-next to run with Java 21.
   - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build-next-java.yml'"
@@ -21,14 +19,6 @@ build:
             run: |
               mvn --batch-mode install -DskipTests
               mvn --batch-mode com.exasol:quality-summarizer-maven-plugin:summarize
-
-    - name: "release.yml"
-      stepCustomizations:
-        - action: INSERT_AFTER
-          stepId: build
-          content:
-            name: Run summarizer mojo
-            id: maven-run-summarizer
-            run: |
-              mvn --batch-mode install -DskipTests
-              mvn --batch-mode com.exasol:quality-summarizer-maven-plugin:summarize
+              # Ensure that file exists:
+              ls -lh target/metrics.json
+              cat target/metrics.json
