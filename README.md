@@ -50,6 +50,7 @@ Using the default configuration, the plugin will search for the Jacoco report fi
 * `target/jacoco.xml`
 * `target/site/jacoco.xml`
 * `target/site/jacoco/jacoco.xml`
+* `target/site/jacoco-aggregate/jacoco.xml`
 
 You can configure a custom location like this:
 

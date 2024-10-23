@@ -74,7 +74,7 @@ class SummarizerMojoIT {
         }
     }
 
-    @CsvSource({ "jacoco.xml", "site/jacoco.xml", "site/jacoco/jacoco.xml" })
+    @CsvSource({ "jacoco.xml", "site/jacoco.xml", "site/jacoco/jacoco.xml", "site/jacoco-aggregate/jacoco.xml" })
     @ParameterizedTest
     void testExtractPathCoverageFromPath(final Path jacocoReportPath) throws Exception {
         final Path baseTestDir = BASE_TEST_DIR.resolve("project-with-coverage");

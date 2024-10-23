@@ -68,7 +68,8 @@ public class SummarizerMojo extends AbstractMojo {
             return this.jacocoReport.toPath().toAbsolutePath();
         }
         final Path targetDir = prepareTargetDirectory();
-        final List<Path> jacocoXMLPaths = Stream.of("jacoco.xml", "site/jacoco.xml", "site/jacoco/jacoco.xml")
+        final List<Path> jacocoXMLPaths = Stream
+                .of("jacoco.xml", "site/jacoco.xml", "site/jacoco/jacoco.xml", "site/jacoco-aggregate/jacoco.xml")
                 .map(targetDir::resolve).toList();
         final Optional<Path> jacocoXMLPath = jacocoXMLPaths.stream().filter(Files::exists).findFirst();
         if (jacocoXMLPath.isEmpty()) {
