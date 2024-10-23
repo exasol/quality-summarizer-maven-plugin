@@ -34,6 +34,53 @@ A typical file looks like this:
 }
 ```
 
+## Usage
+
+Add the following plugin to your `pom.xml`:
+
+```xml
+<plugin>
+    <groupId>com.exasol</groupId>
+    <artifactId>quality-summarizer-maven-plugin</artifactId>
+    <version>CURRENT_VERSION</version>
+    <executions>
+        <execution>
+            <id>summarize-metrics</id>
+            <goals>
+                <goal>summarize</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+Using the default configuration, the plugin will search for the Jacoco report file in the following locations:
+* `target/jacoco.xml`
+* `target/site/jacoco.xml`
+* `target/site/jacoco/jacoco.xml`
+* `target/site/jacoco-aggregate/jacoco.xml`
+
+You can configure a custom location like this:
+
+```xml
+<plugin>
+    <groupId>com.exasol</groupId>
+    <artifactId>quality-summarizer-maven-plugin</artifactId>
+    <version>CURRENT_VERSION</version>
+    <executions>
+        <execution>
+            <id>summarize-metrics</id>
+            <goals>
+                <goal>summarize</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <jacocoReport>target/site/custom-file.xml</jacocoReport>
+    </configuration>
+</plugin>
+```
+
 ## Information for Users
 
 * [Changelog](doc/changes/changelog.md)

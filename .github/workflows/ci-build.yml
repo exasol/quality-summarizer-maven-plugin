@@ -67,6 +67,11 @@ jobs:
           mvn --batch-mode clean verify \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false
+      - name: Run summarizer mojo
+        id: maven-run-summarizer
+        run: |
+          mvn --batch-mode install -DskipTests
+          mvn --batch-mode com.exasol:quality-summarizer-maven-plugin:summarize
       - name: Sonar analysis
         id: sonar-analysis
         if: ${{ env.SONAR_TOKEN != null }}

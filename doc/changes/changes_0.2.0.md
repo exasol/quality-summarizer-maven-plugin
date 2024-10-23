@@ -1,10 +1,14 @@
 # Quality Summarizer Maven Plugin 0.2.0, released 2024-10-23
 
-Code name: Downgrade Maven Version
+Code name: Configure Jacoco report path.
 
 ## Summary
 
-This version downgrades the required Maven version from 3.8.8 to 3.8.7, allowing this plugin to work on GitHub action runners `windows-latest`. The release also allows reading JaCoCo report with `doctype` declaration and extracts the overall coverage from the JaCoCo report.
+This release allows configuring the JaCoCo report path. It also downgrades the required Maven version from 3.8.8 to 3.8.7, allowing this plugin to work on GitHub action runners `windows-latest`. The release also allows reading JaCoCo report with `doctype` declaration and extracts the overall coverage from the JaCoCo report.
+
+## Features
+
+* #8: Configure JaCoCo report path
 
 ## Bugfixes
 

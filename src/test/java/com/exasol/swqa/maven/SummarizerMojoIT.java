@@ -2,29 +2,29 @@ package com.exasol.swqa.maven;
 
 import static com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter.getCurrentProjectVersion;
 import static java.time.temporal.ChronoUnit.MILLIS;
-import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-import org.apache.maven.it.Verifier;
-import org.junit.jupiter.api.*;
-import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import static org.hamcrest.io.FileMatchers.anExistingFile;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
+
+import org.apache.maven.it.VerificationException;
+import org.apache.maven.it.Verifier;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 
 // [itest -> dsn~os-compatibility~1]]
 class SummarizerMojoIT {
@@ -74,19 +74,57 @@ class SummarizerMojoIT {
         }
     }
 
-    private static Path prepareSiteDir(Path targetDir) {
+    @CsvSource({ "jacoco.xml", "site/jacoco.xml", "site/jacoco/jacoco.xml", "site/jacoco-aggregate/jacoco.xml" })
+    @ParameterizedTest
+    void testExtractPathCoverageFromPath(final Path jacocoReportPath) throws Exception {
+        final Path baseTestDir = BASE_TEST_DIR.resolve("project-with-coverage");
+        final Path targetDir = baseTestDir.resolve("target");
+        final Path siteDir = prepareSiteDir(targetDir);
+        try {
+            createMetricsFile(siteDir, jacocoReportPath, 20, 80);
+            // [itest -> qs~allowed-execution-time~1]
+            runMojoWithMaxAllowedExecutionDuration(baseTestDir, MAX_EXECUTION_TIME);
+            assertThat(Files.readString(targetDir.resolve("metrics.json")), equalTo("""
+                    {
+                        "coverage" : %s
+                    }
+                    """.formatted(80.0)));
+        } finally {
+            cleanUpSiteDir(siteDir);
+        }
+    }
+
+    @Test
+    void testExtractPathCoverageFromCustomPath() throws Exception {
+        final Path baseTestDir = BASE_TEST_DIR.resolve("project-with-custom-jacoco-report-path");
+        final Path targetDir = baseTestDir.resolve("target");
+        final Path siteDir = prepareSiteDir(targetDir);
+        try {
+            createMetricsFile(siteDir, Path.of("custom-file.xml"), 20, 80);
+            runMojoWithMaxAllowedExecutionDuration(baseTestDir, MAX_EXECUTION_TIME);
+            assertThat(Files.readString(targetDir.resolve("metrics.json")), equalTo("""
+                    {
+                        "coverage" : %s
+                    }
+                    """.formatted(80.0)));
+        } finally {
+            cleanUpSiteDir(siteDir);
+        }
+    }
+
+    private static Path prepareSiteDir(final Path targetDir) {
         final Path siteDir = targetDir.resolve("site");
         try {
             deleteDirectoryRecursively(siteDir);
             Files.createDirectories(siteDir);
             return siteDir;
-        } catch (IOException exception) {
+        } catch (final IOException exception) {
             throw new UncheckedIOException(
                     "Failed to prepare a clean site directory " + siteDir + ": " + exception.getMessage(), exception);
         }
     }
 
-    private static void deleteDirectoryRecursively(Path dir) throws IOException {
+    private static void deleteDirectoryRecursively(final Path dir) throws IOException {
         if (Files.exists(dir)) {
             try (final Stream<Path> dirElements = Files.walk(dir)) {
                 dirElements //
@@ -103,7 +141,14 @@ class SummarizerMojoIT {
     }
 
     private static void createMetricsFile(final Path siteDir, final int missed, final int covered) throws IOException {
-        Files.write(siteDir.resolve("jacoco.xml"), """
+        createMetricsFile(siteDir, Path.of("jacoco.xml"), missed, covered);
+    }
+
+    private static void createMetricsFile(final Path siteDir, final Path reportPath, final int missed,
+            final int covered) throws IOException {
+        final Path path = siteDir.resolve(reportPath);
+        Files.createDirectories(path.getParent());
+        Files.write(path, """
                 <report name="Example project">
                     <counter type="BRANCH" missed="%d" covered="%d"/>
                 </report>
@@ -137,7 +182,7 @@ class SummarizerMojoIT {
      * @param projectDir directory where the test Maven project resides
      * @return verifier instance
      */
-    private static Verifier createMavenVerifier(Path projectDir) {
+    private static Verifier createMavenVerifier(final Path projectDir) {
         final Verifier verifier = testEnvironment.getVerifier(projectDir);
         verifier.setAutoclean(false);
         return verifier;
@@ -145,16 +190,14 @@ class SummarizerMojoIT {
 
     @Test
     // [itest -> qs~failing-safely-when-summarization-breaks~1]
-    void testWhenIgnoreFailureIsSetThenMissingJaCoCoReportFileIsIgnored() {
-        assertDoesNotThrow(() -> {
-            final Path emptyProjectDir = BASE_TEST_DIR.resolve("empty-project");
-            final Verifier verifier = createMavenVerifier(emptyProjectDir);
-            verifier.executeGoal(MAVEN_GOAL);
-            verifier.verifyErrorFreeLog();
-            verifier.verifyTextInLog("The following issue occurred during quality metric summarization: "
-                    + "'Failed to extract coverage from the JaCoCo XML");
-            assertThat(emptyProjectDir.resolve("metrics.json").toFile(), not(anExistingFile()));
-        });
+    void testWhenIgnoreFailureIsSetThenMissingJaCoCoReportFileIsIgnored() throws VerificationException {
+        final Path emptyProjectDir = BASE_TEST_DIR.resolve("empty-project");
+        final Verifier verifier = createMavenVerifier(emptyProjectDir);
+        verifier.executeGoal(MAVEN_GOAL);
+        verifier.verifyErrorFreeLog();
+        verifier.verifyTextInLog("The following issue occurred during quality metric summarization: "
+                + "'Jacoco XML report not found in the following locations:");
+        assertThat(emptyProjectDir.resolve("metrics.json").toFile(), not(anExistingFile()));
     }
 
     @Test
