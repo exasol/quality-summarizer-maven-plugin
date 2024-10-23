@@ -1,4 +1,4 @@
-# Quality Summarizer Maven Plugin 0.2.0, released 2024-??-??
+# Quality Summarizer Maven Plugin 0.2.0, released 2024-10-23
 
 Code name: Downgrade Maven Version
 
