@@ -43,6 +43,14 @@ Add the following plugin to your `pom.xml`:
     <groupId>com.exasol</groupId>
     <artifactId>quality-summarizer-maven-plugin</artifactId>
     <version>CURRENT_VERSION</version>
+    <executions>
+        <execution>
+            <id>summarize-metrics</id>
+            <goals>
+                <goal>summarize</goal>
+            </goals>
+        </execution>
+    </executions>
 </plugin>
 ```
 
@@ -59,6 +67,14 @@ You can configure a custom location like this:
     <groupId>com.exasol</groupId>
     <artifactId>quality-summarizer-maven-plugin</artifactId>
     <version>CURRENT_VERSION</version>
+    <executions>
+        <execution>
+            <id>summarize-metrics</id>
+            <goals>
+                <goal>summarize</goal>
+            </goals>
+        </execution>
+    </executions>
     <configuration>
         <jacocoReport>target/site/custom-file.xml</jacocoReport>
     </configuration>
