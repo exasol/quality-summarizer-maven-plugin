@@ -92,7 +92,8 @@ public class SummarizerMojo extends AbstractMojo {
             final NodeList counterNodes = reportNode.getElementsByTagName("counter");
             for (int i = 0; i < counterNodes.getLength(); i++) {
                 final Element counterNode = (Element) counterNodes.item(i);
-                if ("BRANCH".equals(counterNode.getAttribute("type"))) {
+                if ("BRANCH".equals(counterNode.getAttribute("type"))
+                        && "report".equals(counterNode.getParentNode().getNodeName())) {
                     return calculateBranchCoverage(counterNode);
                 }
             }
