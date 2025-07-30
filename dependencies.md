@@ -5,8 +5,8 @@
 
 | Dependency                                 | License                          |
 | ------------------------------------------ | -------------------------------- |
-| [Maven Plugin API][0]                      | [Apache License, Version 2.0][1] |
-| [Maven Core][2]                            | [Apache License, Version 2.0][1] |
+| [Maven Plugin API][0]                      | [Apache-2.0][1]                  |
+| [Maven Core][2]                            | [Apache-2.0][1]                  |
 | [Maven Plugin Tools Java Annotations][3]   | [Apache-2.0][1]                  |
 | [Guava: Google Core Libraries for Java][4] | [Apache License, Version 2.0][5] |
 
@@ -21,8 +21,8 @@
 | [Maven Project Version Getter][13]     | [MIT License][14]                |
 | [Plexus Archiver Component][15]        | [Apache License, Version 2.0][1] |
 | [Apache Commons IO][16]                | [Apache-2.0][1]                  |
-| [SLF4J API Module][17]                 | [MIT License][18]                |
-| [SLF4J JDK14 Provider][17]             | [MIT License][18]                |
+| [SLF4J API Module][17]                 | [MIT][18]                        |
+| [SLF4J JDK14 Provider][17]             | [MIT][18]                        |
 
 ## Plugin Dependencies
 
@@ -51,13 +51,13 @@
 | [Reproducible Build Maven Plugin][46]                   | [Apache 2.0][5]                       |
 | [Apache Maven Dependency Plugin][47]                    | [Apache-2.0][1]                       |
 
-[0]: https://maven.apache.org/ref/3.8.7/maven-plugin-api/
+[0]: https://maven.apache.org/ref/3.9.11/maven-plugin-api/
 [1]: https://www.apache.org/licenses/LICENSE-2.0.txt
-[2]: https://maven.apache.org/ref/3.8.7/maven-core/
+[2]: https://maven.apache.org/ref/3.9.11/maven-core/
 [3]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [4]: https://github.com/google/guava
 [5]: http://www.apache.org/licenses/LICENSE-2.0.txt
-[6]: https://junit.org/junit5/
+[6]: https://junit.org/
 [7]: https://www.eclipse.org/legal/epl-v20.html
 [8]: https://github.com/mockito/mockito
 [9]: https://opensource.org/licenses/MIT
@@ -69,7 +69,7 @@
 [15]: https://codehaus-plexus.github.io/plexus-archiver/
 [16]: https://commons.apache.org/proper/commons-io/
 [17]: http://www.slf4j.org
-[18]: http://www.opensource.org/licenses/mit-license.php
+[18]: https://opensource.org/license/mit
 [19]: http://sonarsource.github.io/sonar-scanner-maven/
 [20]: http://www.gnu.org/licenses/lgpl.txt
 [21]: https://maven.apache.org/plugins/maven-toolchains-plugin/
