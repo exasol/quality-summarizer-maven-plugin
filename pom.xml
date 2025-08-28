@@ -5,7 +5,7 @@
     <groupId>com.exasol</groupId>
     <!-- Do not remove even if this is redundant. The integration test requires it. -->
     <artifactId>quality-summarizer-maven-plugin</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <description>Maven plugin that summarizes quality metrics from different source into a single file</description>
     <packaging>maven-plugin</packaging>
     <properties>
@@ -16,6 +16,16 @@
     <prerequisites>
         <maven>${maven.core.version}</maven>
     </prerequisites>
+    <dependencyManagement>
+        <!-- Transitive dependency for CVE-2025-48924 direct dependency:  maven.core.3.8.7 -->
+        <dependencies>
+            <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.18.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -88,27 +98,26 @@
             <version>33.3.1-jre</version>
             <scope>provided</scope>
         </dependency>
-
         <!-- Enable logging in tests -->
-         <dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>2.0.16</version>
             <scope>test</scope>
-         </dependency>
-         <dependency>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <version>2.0.16</version>
             <scope>test</scope>
-         </dependency>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>4.3.3</version>
+                <version>5.2.3</version>
                 <executions>
                     <execution>
                         <goals>
@@ -199,7 +208,7 @@
     <parent>
         <artifactId>quality-summarizer-maven-plugin-generated-parent</artifactId>
         <groupId>com.exasol</groupId>
-        <version>0.2.0</version>
+        <version>0.2.1</version>
         <relativePath>pk_generated_parent.pom</relativePath>
     </parent>
 </project>
