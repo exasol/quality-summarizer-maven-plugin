@@ -12,6 +12,7 @@ build:
     - name: "ci-build.yml"
       stepCustomizations:
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: build-pk-verify
           content:
             name: Run summarizer mojo

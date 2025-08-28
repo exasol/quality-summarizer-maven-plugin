@@ -33,12 +33,11 @@ jobs:
       - name: Set up JDKs
         id: setup-jdks
         uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: |
-            11
-            17
+        with: {
+          distribution: temurin,
+          java-version: '17',
           cache: maven
+        }
       - name: Print issues
         id: debug-print-issues
         run: |
@@ -172,5 +171,5 @@ jobs:
           message_format: '{workflow} created Pull Request ${{ steps.create-pr.outputs.pr_url }}'
         }
         env: {
-          SLACK_WEBHOOK_URL: '${{ secrets.INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK }}'
+          SLACK_WEBHOOK_URL: '${{ secrets.INTEGRATION_TEAM_SECURITY_UPDATES_WEBHOOK }}'
         }
