@@ -1,4 +1,4 @@
-# Quality Summarizer Maven Plugin 0.2.1, released 2025-08-28
+# Quality Summarizer Maven Plugin 0.2.1, released 2025-08-29
 
 Code name: Fixes for vulnerability CVE-2025-48924
 
