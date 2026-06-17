@@ -1,3 +1,7 @@
+# ⚠ Deprecation Warning ⚠
+
+This project is deprecated and not maintained any more.
+
 # quality-summarizer-maven-plugin
 
 [![Build Status](https://github.com/exasol/quality-summarizer-maven-plugin/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/quality-summarizer-maven-plugin/actions/workflows/ci-build.yml)
